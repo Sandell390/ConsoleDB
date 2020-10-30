@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace ConsoleDB
 {
@@ -12,35 +14,53 @@ namespace ConsoleDB
     {
         static void Main(string[] args)
         {
-            string connStr = "server=localhost;user=root;database=minecraftcoords;port=3306;password=hack2020;";
-            MySqlConnection conn = new MySqlConnection(connStr);
+            Database.serverip = "localhost";
+            Database.user = "root";
+            Database.database = "minecraftcoords";
+            Database.port = "3306";
+            Database.password = "hack2020";
 
-            try
+
+            User user = new User();
+
+            Database.connect();
+
+            Console.WriteLine("1. Login ");
+            Console.WriteLine("2. Register ");
+
+            int input = int.Parse(Console.ReadLine());
+
+
+            switch (input)
             {
-                Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
+                case 1:
+                    user.Login();
+                    break;
+                case 2:
+                    user.Register();
+                    
+                    break;
+                default:
+                    break;
+            }
 
-                string sql = "SELECT * FROM minecraftcoords.user";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                
+            List<string> test = new List<string>() { "name", "email" };
+            string sql = Database.SELECT(test,tableName: "user");
+            MySqlCommand cmd = new MySqlCommand(sql, Database.mySql);
+            MySqlDataReader rdr = cmd.ExecuteReader();
 
-                while (rdr.Read())
+
+            while (rdr.Read())
+            {
+                for (int i = 0; i < rdr.FieldCount; i++)
                 {
-                    for (int i = 0; i < rdr.FieldCount; i++)
-                    {
-                        Console.Write(rdr[i] + " -- ");
-                    }
-                    Console.WriteLine();
+                    Console.Write(rdr[i] + " -- ");
                 }
-                rdr.Close();
+                Console.WriteLine();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            rdr.Close();
 
-            conn.Close();
+            Database.disconnect();
             Console.WriteLine("Done.");
             Console.ReadKey();
 
