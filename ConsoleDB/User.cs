@@ -27,6 +27,51 @@ namespace ConsoleDB
         public void Login() 
         {
             Console.Clear();
+
+            Console.WriteLine("Hej, Du er nu ved at logge ind på verdens bedste service");
+
+            string loginEmail = "";
+            string password = "";
+            bool currentLogin = false;
+
+            while (!currentLogin)
+            {
+                Console.WriteLine("");
+
+                Console.Write("Email: ");
+                loginEmail = Console.ReadLine();
+
+                Console.WriteLine("");
+
+                Console.Write("Password: ");
+                password = Console.ReadLine();
+
+                password = encode(password);
+
+                Dictionary<string, string> conditions = new Dictionary<string, string>();
+                conditions.Add("email",loginEmail);
+                conditions.Add("password", password);
+
+                string sql = Database.SELECT(conditions: conditions, tableName: "user");
+                MySqlDataReader reader = Database.MySqlReader(sql);
+
+                if (reader.HasRows) 
+                {
+                    while (reader.Read()) 
+                    {
+                        name = reader["name"].ToString();
+                        email = reader["email"].ToString();
+                        address = reader["address"].ToString();
+                        mobilenr = reader["mobilenr"].ToString();
+                        postnr = reader["postnr"].ToString();
+                    }
+                    currentLogin = true;
+                    
+                }
+            }
+
+            Menu();
+            
         }
 
         public void Register() 
@@ -118,10 +163,10 @@ namespace ConsoleDB
             Console.WriteLine("Du er nu registred");
             Thread.Sleep(1500);
 
-            menu();
+            Menu();
         }
 
-        void menu() 
+        void Menu() 
         {
             Console.Clear();
 

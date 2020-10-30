@@ -128,7 +128,6 @@ namespace ConsoleDB
         {
             MySqlCommand cmd = new MySqlCommand(sql, Database.mySql);
             return cmd.ExecuteReader();
-
         }
 
     }
