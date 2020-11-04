@@ -20,47 +20,38 @@ namespace ConsoleDB
             Database.port = "3306";
             Database.password = "hack2020";
 
-
-            User user = new User();
-
-            Database.connect();
-
-            Console.WriteLine("1. Login ");
-            Console.WriteLine("2. Register ");
-
-            int input = int.Parse(Console.ReadLine());
-
-
-            switch (input)
+            bool power = true;
+            do
             {
-                case 1:
-                    user.Login();
-                    break;
-                case 2:
-                    user.Register();
-                    
-                    break;
-                default:
-                    break;
-            }
+                Console.Clear();
+                Database.connect();
+                User user = new User();
 
-            List<string> test = new List<string>() { "name", "email" };
-            string sql = Database.SELECT(test,tableName: "user");
-            MySqlCommand cmd = new MySqlCommand(sql, Database.mySql);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+                Console.WriteLine("1. Login ");
+                Console.WriteLine("2. Register ");
+
+                int input = int.Parse(Console.ReadLine());
 
 
-            while (rdr.Read())
-            {
-                for (int i = 0; i < rdr.FieldCount; i++)
+                switch (input)
                 {
-                    Console.Write(rdr[i] + " -- ");
+                    case 1:
+                        user.Login();
+                        break;
+                    case 2:
+                        user.Register();
+                        break;
+                    default:
+                        power = false;
+                        break;
                 }
-                Console.WriteLine();
-            }
-            rdr.Close();
 
-            Database.disconnect();
+
+                Database.disconnect();
+
+            } while (power);
+
+            
             Console.WriteLine("Done.");
             Console.ReadKey();
 

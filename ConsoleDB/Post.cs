@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace ConsoleDB
 {
@@ -16,11 +18,27 @@ namespace ConsoleDB
 
         public void ViewDetails() 
         {
+            string username = GetUsernameFromId();
+
             Console.WriteLine($"------------------");
-            Console.WriteLine($"User ID: {id_user}");
+            Console.WriteLine($"Username: {username}");
             Console.WriteLine($"Description: {desp}");
             Console.WriteLine($"X: {x} Y: {y} Z: {z}");
             Console.WriteLine($"------------------");
+        }
+
+        string GetUsernameFromId() 
+        {
+            string name = "";
+            MySqlDataReader reader = Database.MySqlReader($"SELECT name from user where id_user='{id_user}'");
+
+            while (reader.Read()) 
+            {
+                name = reader[0].ToString();
+            }
+            reader.Close();
+
+            return name;
         }
 
     }

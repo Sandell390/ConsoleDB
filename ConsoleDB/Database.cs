@@ -119,7 +119,14 @@ namespace ConsoleDB
 
             sqlQuery += ")";
 
-            MySqlCommand cmd = new MySqlCommand(sqlQuery, mySql);
+            MySqlCommand cmd = mySql.CreateCommand();
+
+            cmd.CommandText = sqlQuery;
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                cmd.Parameters.AddWithValue(columns[i],values[i]);
+            }
 
             cmd.ExecuteNonQuery();
         }
